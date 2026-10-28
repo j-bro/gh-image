@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"net/http"
 	"os"
@@ -87,7 +88,7 @@ func productionDeps() deps {
 		resolveRepo: repo.Resolve,
 		newUploader: func(tokenFlag string, stderr io.Writer) uploadFunc {
 			var newBearer func() (*upload.BearerClient, error)
-			if useBearerRoute(tokenFlag, os.Getenv(sessionTokenEnvVar)) {
+			if host.UploadsURL() != "" && useBearerRoute(tokenFlag, os.Getenv(sessionTokenEnvVar)) {
 				newBearer = func() (*upload.BearerClient, error) {
 					token, err := upload.GHAuthToken()
 					if err != nil {

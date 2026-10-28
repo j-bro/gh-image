@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -24,10 +25,11 @@ func execRun(name string, args ...string) ([]byte, error) {
 	return exec.Command(name, args...).Output()
 }
 
-var (
-	sshRemoteRe   = regexp.MustCompile(`git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$`)
-	httpsRemoteRe = regexp.MustCompile(`https://github\.com/([^/]+)/([^/]+?)(?:\.git)?$`)
-)
+func remoteRes() (ssh, https *regexp.Regexp) {
+	h := regexp.QuoteMeta(host.Name())
+	return regexp.MustCompile(`git@` + h + `:([^/]+)/([^/]+?)(?:\.git)?$`),
+		regexp.MustCompile(`https://` + h + `/([^/]+)/([^/]+?)(?:\.git)?$`)
+}
 
 // fromRemote infers the GitHub owner/repo from the git remote in the current directory.
 func fromRemote(run runner) (owner, name string, err error) {
@@ -37,6 +39,7 @@ func fromRemote(run runner) (owner, name string, err error) {
 	}
 	remote := strings.TrimSpace(string(out))
 
+	sshRemoteRe, httpsRemoteRe := remoteRes()
 	if m := sshRemoteRe.FindStringSubmatch(remote); m != nil {
 		return m[1], m[2], nil
 	}

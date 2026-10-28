@@ -7,6 +7,7 @@ package cookies
 
 import (
 	"context"
+	"github.com/drogers0/gh-image/internal/host"
 
 	"github.com/browserutils/kooky"
 	_ "github.com/browserutils/kooky/browser/brave"
@@ -54,7 +55,7 @@ func readRawCookies() ([]rawCookie, error) {
 	// session from a stale logged-out one in the same store.
 	kcookies, err := kooky.ReadCookies(ctx,
 		kooky.Valid,
-		kooky.DomainHasSuffix("github.com"),
+		kooky.DomainHasSuffix(host.Name()),
 	)
 	return mapKookyCookies(kcookies), err
 }

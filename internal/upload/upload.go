@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"mime"
 	"mime/multipart"
@@ -61,7 +62,7 @@ func NewClient(sessionCookie *http.Cookie) *Client {
 			Jar:     cookies.NewGitHubCookieJar(sessionCookie),
 			Timeout: 30 * time.Second,
 		},
-		baseURL: "https://github.com",
+		baseURL: host.BaseURL(),
 	}
 }
 

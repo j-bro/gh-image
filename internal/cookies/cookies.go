@@ -2,6 +2,7 @@ package cookies
 
 import (
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"net/http"
 	"sort"
 	"strings"
@@ -14,7 +15,7 @@ func NewSessionCookie(value string) *http.Cookie {
 	return &http.Cookie{
 		Name:     "user_session",
 		Value:    value,
-		Domain:   "github.com",
+		Domain:   host.Name(),
 		Path:     "/",
 		Secure:   true,
 		HttpOnly: true,
@@ -87,7 +88,7 @@ func groupCandidates(raw []rawCookie) []sessionCandidate {
 		c := &raw[i]
 		// Host-only github.com only; tolerate a leading-dot domain but still
 		// exclude subdomains (gist.github.com, …) from the logged_in correlation.
-		if strings.TrimPrefix(c.domain, ".") != "github.com" {
+		if strings.TrimPrefix(c.domain, ".") != host.Name() {
 			continue
 		}
 		s := stores[c.store]

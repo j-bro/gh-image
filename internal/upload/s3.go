@@ -3,6 +3,7 @@ package upload
 import (
 	"bytes"
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -81,7 +82,7 @@ func uploadToS3(policy *policyResponse, filePath, fileName, contentType string) 
 		return fmt.Errorf("creating S3 request: %w", err)
 	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
-	req.Header.Set("Origin", "https://github.com")
+	req.Header.Set("Origin", host.BaseURL())
 	req.Header.Set("User-Agent", httputil.UserAgent)
 
 	// S3 upload uses no GitHub cookies — the presigned policy handles auth.

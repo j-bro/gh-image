@@ -3,6 +3,7 @@ package upload
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"net"
 	"net/http"
@@ -19,7 +20,6 @@ import (
 // It accepts a `gh` OAuth token as a bearer credential, but only for images and
 // video, and only on repositories the token can push to. Router treats every
 // other case as a fallback to the browser-session flow.
-const bearerUploadURL = "https://uploads.github.com"
 
 // StatusError reports a non-2xx response from the bearer upload endpoint.
 // Router classifies Code to decide how far a failure generalizes: a 404 is
@@ -73,7 +73,7 @@ func NewBearerClient(token string) *BearerClient {
 				ExpectContinueTimeout: 2 * time.Second,
 			},
 		},
-		baseURL: bearerUploadURL,
+		baseURL: host.UploadsURL(),
 		token:   token,
 	}
 }

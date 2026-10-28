@@ -2,6 +2,7 @@ package session
 
 import (
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"net/http"
 	"regexp"
@@ -15,7 +16,7 @@ var userLoginRe = regexp.MustCompile(`<meta name="user-login" content="([^"]+)"`
 
 // profileURL is the endpoint CheckValidity probes. A var (not a const) so tests can
 // point CheckValidity at an httptest server and exercise it end-to-end.
-var profileURL = "https://github.com/settings/profile"
+var profileURL = host.BaseURL() + "/settings/profile"
 
 // CheckValidity verifies a GitHub session cookie is valid.
 // It returns the authenticated username on success, or an error if the token

@@ -1,6 +1,7 @@
 package cookies
 
 import (
+	"github.com/drogers0/gh-image/internal/host"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -35,7 +36,7 @@ func NewGitHubCookieJar(sessionCookie *http.Cookie) http.CookieJar {
 	// PublicSuffixList; passing nil is always safe.
 	jar, _ := cookiejar.New(nil)
 	// url.Parse with a hardcoded, valid URL never returns an error.
-	ghURL, _ := url.Parse("https://github.com")
+	ghURL, _ := url.Parse(host.BaseURL())
 	pair := SessionCookiePair(sessionCookie)
 	jar.SetCookies(ghURL, pair[:]) // convert fixed-size array to slice
 	return jar

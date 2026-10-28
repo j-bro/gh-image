@@ -9,6 +9,7 @@ package cookies
 
 import (
 	"errors"
+	"github.com/drogers0/gh-image/internal/host"
 	"strings"
 
 	"github.com/moond4rk/hackbrowserdata/browser"
@@ -72,7 +73,7 @@ func mapExtract(userDataDir string, results []types.ExtractResult) []rawCookie {
 			continue
 		}
 		for _, c := range r.Data.Cookies {
-			if !strings.HasSuffix(strings.TrimPrefix(c.Host, "."), "github.com") {
+			if !strings.HasSuffix(strings.TrimPrefix(c.Host, "."), host.Name()) {
 				continue
 			}
 			out = append(out, rawCookie{

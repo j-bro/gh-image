@@ -17,6 +17,7 @@ package download
 import (
 	"errors"
 	"fmt"
+	"github.com/drogers0/gh-image/internal/host"
 	"io"
 	"net/http"
 	"net/url"
@@ -83,8 +84,8 @@ func ParseRef(raw string) (Ref, error) {
 	switch {
 	case u.Scheme != "https":
 		return Ref{}, fmt.Errorf("must be an https URL: %s", raw)
-	case u.Host != "github.com":
-		return Ref{}, fmt.Errorf("must be a github.com URL (got host %q): %s", u.Host, raw)
+	case u.Host != host.Name():
+		return Ref{}, fmt.Errorf("must be a %s URL (got host %q): %s", host.Name(), u.Host, raw)
 	case u.User != nil:
 		return Ref{}, fmt.Errorf("URL must not contain credentials: %s", raw)
 	}
@@ -169,7 +170,7 @@ func NewClient(newBearer func() (string, error), newCookie func() (*http.Cookie,
 	c := &Client{
 		resolveClient: &http.Client{Timeout: 30 * time.Second, CheckRedirect: noRedirect},
 		fetchClient:   &http.Client{Timeout: 120 * time.Second, CheckRedirect: noRedirect},
-		baseURL:       "https://github.com",
+		baseURL:       host.BaseURL(),
 		notify:        notify,
 		cookie: sync.OnceValues(func() (credential, error) {
 			ck, err := newCookie()
